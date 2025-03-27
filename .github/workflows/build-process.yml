@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+      - name: Remove unwanted stuff
+        uses: gbraad-actions/remove-unwanted@v1
+
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -29,13 +32,30 @@ jobs:
           make oldconfig
           scripts/config --disable SYSTEM_REVOCATION_KEYS
       
-      - name: Run build
+      - name: Run kernel build
         run: |
           make -j $(nproc)
 
-      - name: Upload artifact 
+      - name: Run modules build
+        run: |
+          make INSTALL_MOD_PATH="$PWD/modules" modules_install
+
+      - name: Create modules.vhdx
+        run: |
+          sudo ./Microsoft/scripts/gen_modules_vhdx.sh "$PWD/modules" modules.vhdx
+
+      - name: Upload kernel artifact
         uses: actions/upload-artifact@v4
         with:
           name: wsl2-kernel
           path: arch/x86/boot/bzImage
           retention-days: 7
+
+      - name: Upload modules artifact 
+        uses: actions/upload-artifact@v4
+        with:
+          name: wsl2-modules
+          path: modules.vhdx
+          retention-days: 7
+
+  
