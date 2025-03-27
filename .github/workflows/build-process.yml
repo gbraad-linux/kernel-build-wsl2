@@ -15,7 +15,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            build-essential flex bison libssl-dev libelf-dev
+            build-essential flex bison dwarves libssl-dev libelf-dev cpio qemu-utils
 
       - name: Checkout WSL2 kernel source
         uses: actions/checkout@v4
@@ -27,6 +27,7 @@ jobs:
         run: |
           cp Microsoft/config-wsl .config
           make oldconfig
+          scripts/config --disable SYSTEM_REVOCATION_KEYS
       
       - name: Run build
         run: |
