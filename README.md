@@ -1,1 +1,2 @@
-# wsl2-kernel-build
+Automated build: WSL2 kernel
+============================

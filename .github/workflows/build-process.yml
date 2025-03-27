@@ -1,0 +1,39 @@
+name: "build features"
+run-name: "Build features"
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get install -y \
+            build-essential flex bison libssl-dev libelf-dev
+
+      - name: Checkout WSL2 kernel source
+        uses: actions/checkout@v4
+        with:
+          repository: 'microsoft/WSL2-Linux-Kernel'
+          fetch-depth: 2
+
+      - name: Build prep
+        run: |
+          cp Microsoft/config-wsl .config
+          make oldconfig
+      
+      - name: Run build
+        run: |
+          make -j $(nproc)
+
+      - name: Upload artifact 
+        uses: actions/upload-artifact@v4
+        with:
+          name: wsl2-kernel
+          path: arch/x86/boot/bzImage
+          retention-days: 7
