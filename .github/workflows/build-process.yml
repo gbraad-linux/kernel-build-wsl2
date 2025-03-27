@@ -1,5 +1,5 @@
-name: "build features"
-run-name: "Build features"
+name: "build process"
+run-name: "Build process"
 
 on:
   workflow_dispatch:
@@ -13,6 +13,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          sudo apt-get update
           sudo apt-get install -y \
             build-essential flex bison libssl-dev libelf-dev
 
