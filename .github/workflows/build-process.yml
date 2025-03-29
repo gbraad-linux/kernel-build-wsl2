@@ -42,7 +42,7 @@ jobs:
 
       - name: Create modules.vhdx
         run: |
-          sudo ./Microsoft/scripts/gen_modules_vhdx.sh "$PWD/modules" modules.vhdx
+          sudo ./Microsoft/scripts/gen_modules_vhdx.sh "$PWD/modules" $(make -s kernelrelease) modules.vhdx
 
       - name: Upload kernel artifact
         uses: actions/upload-artifact@v4
